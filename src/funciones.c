@@ -57,7 +57,7 @@ void ordenarEstudiantes(Estudiante *alumnos, int cantidad) {
 
 /* Guarda la cantidad y luego el arreglo completo en estudiantes.dat */
 void guardarEstudiantes(const Estudiante *alumnos, int cantidad) {
-    FILE *archivo = fopen(NOMBRE_ARCHIVO, "wb");
+    FILE *archivo = fopen(RUTA_DATOS, "wb");
     if (archivo == NULL) return;
 
     fwrite(&cantidad, sizeof(int), 1, archivo);
@@ -70,7 +70,7 @@ void guardarEstudiantes(const Estudiante *alumnos, int cantidad) {
 /* Carga estudiantes.dat en un arreglo dinamico (malloc).
  * Devuelve la cantidad de registros leidos (0 si el archivo no existe). */
 int cargarEstudiantes(Estudiante **alumnos) {
-    FILE *archivo = fopen(NOMBRE_ARCHIVO, "rb");
+    FILE *archivo = fopen(RUTA_DATOS, "rb");
     if (archivo == NULL) {
         *alumnos = NULL;
         return 0;

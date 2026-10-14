@@ -21,8 +21,14 @@
     CONSTANTES DEL SISTEMA
 ---------------------------------------------------------*/
 
-/* Nombre del archivo binario donde se guardan los datos */
-#define NOMBRE_ARCHIVO    "estudiantes.dat"
+/* Nombre del archivo binario donde se guardan los datos.
+ * La version web usa "estudiantes.dat" (dentro de su propio sistema
+ * de archivos). La version de terminal lo manda FUERA del proyecto
+ * con -DRUTA_DATOS desde el Makefile, para no mezclar datos con el
+ * codigo fuente. */
+#ifndef RUTA_DATOS
+#define RUTA_DATOS "estudiantes.dat"
+#endif
 
 /* Notas */
 #define NOTA_MINIMA       0.0f
