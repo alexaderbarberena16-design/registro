@@ -1,11 +1,16 @@
 #=====================================================================
 #  Makefile — Registro de Estudiantes (versión terminal)
 #
-#  Uso (desde la raíz del proyecto):
-#    make          compila en ../registro-no-codigo/bin/registro_estudiantes
-#    make run      compila y ejecuta
-#    make clean    borra los archivos que genera este Makefile
-#    make wasm     compila la versión WebAssembly (requiere emsdk)
+#  Uso (SIEMPRE desde la raíz del proyecto):
+#    make -f build/Makefile          compila en ../registro-no-codigo/bin/registro_estudiantes
+#    make -f build/Makefile run      compila y ejecuta
+#    make -f build/Makefile clean    borra los archivos que genera este Makefile
+#    make -f build/Makefile wasm     compila la versión WebAssembly (requiere emsdk)
+#
+#  Este Makefile vive en build/ (antes de include/). OJO: hay que
+#  ejecutarlo desde la RAÍZ del proyecto con -f build/Makefile, porque
+#  las rutas de main.c, src/ y ../registro-no-codigo/ son relativas
+#  a la raíz.
 #
 #  Todo lo que NO es código (binario, .o y estudiantes.dat) se genera
 #  FUERA del proyecto, en ../registro-no-codigo/, para que la carpeta
