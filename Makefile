@@ -20,6 +20,9 @@ SRC      = main.c \
            src/validacion.c \
            src/memoria.c \
            src/terminal.c \
+           src/estudiante.c \
+           src/boletin.c \
+           src/reporte.c \
            src/menu.c
 
 OBJ      = $(SRC:%.c=bin/%.o)

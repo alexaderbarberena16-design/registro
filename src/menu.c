@@ -12,6 +12,9 @@
 
 #include "../include/menu.h"
 #include "../include/terminal.h"
+#include "../include/estudiante.h"
+#include "../include/boletin.h"
+#include "../include/reporte.h"
 #include "../include/funciones.h"
 #include "../include/constantes.h"
 
