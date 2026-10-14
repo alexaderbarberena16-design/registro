@@ -1,16 +1,28 @@
 /*
  * funciones.c — Logica pura del Sistema de Registro de Estudiantes.
  *
- * Este es el unico .c de logica que entra al WebAssembly
+ * Este archivo es uno de los .c de logica que entran al WebAssembly
  * (ver ../registro-estudiantes-web/herramientas/build_wasm.sh:
- *  api_web/api_web.c + nucleo/funciones.c).
+ *  api_web/api_web.c + src/funciones.c).
  *
  * NO contiene nada de terminal: sin getch, gotoxy, scanf ni colores
  * ANSI. La interfaz de terminal vive en terminal.c y la del navegador
  * en web/index.html.
  */
 
-#include "estudiantes.h"
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE  /* Necesario en Linux para que strcasestr funcione sin advertencias */
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <strings.h>
+
+#include "../include/funciones.h"
+#include "../include/validacion.h"
+#include "../include/memoria.h"
+#include "../include/constantes.h"
 
 /* ================================================================== */
 /*  ORDENAMIENTO CON qsort()                                          */
@@ -137,10 +149,10 @@ int agregarEstudiante(Estudiante **alumnos, int *cantidad, Estudiante *nuevo) {
 /* ================================================================== */
 
 /*
- * coincideNombre() — la REGLA de búsqueda, definida una sola vez.
+ * coincideNombre() — la REGLA de busqueda, definida una sola vez.
  *
- * La terminal y la versión web iteran por su lado (una dibuja en
- * pantalla, otra genera JSON), pero ambas preguntan por aquí.
+ * La terminal y la version web iteran por su lado (una dibuja en
+ * pantalla, otra genera JSON), pero ambas preguntan por aqui.
  *
  * 1 = hay coincidencia parcial, sin distinguir mayusculas.
  */

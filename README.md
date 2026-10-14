@@ -1,7 +1,10 @@
 # Registro de Estudiantes — Terminal
 
-Proyecto en **C** organizado en módulos: `nucleo/` (lógica pura) y `terminal/`
-(interfaz de consola). Corre en la terminal.
+Proyecto en **C** organizado en módulos y cortado como el proyecto
+**15-Modular-Boletin** del curso (programación estructurada): cabeceras en
+`include/` (una por módulo, más `estructuras.h` y `constantes.h`) y las
+implementaciones en `src/`, con un `main.c` que solo hace llamadas.
+Corre en la terminal.
 
 La misma lógica se compila también a **WebAssembly** para el navegador; esa
 parte vive en una carpeta aparte:
@@ -14,13 +17,14 @@ parte vive en una carpeta aparte:
 
 | | Terminal | Navegador |
 |---|---|---|
-| Código | `main.c` + `nucleo/funciones.c` + `terminal/terminal.c` | `../registro-estudiantes-web/api_web/api_web.c` + `nucleo/funciones.c` |
+| Código | `main.c` + `src/funciones.c` + `src/terminal.c` | `../registro-estudiantes-web/api_web/api_web.c` + `src/funciones.c` |
 | Compilador | `gcc` | `emcc` (Emscripten) |
 | Interfaz | `gotoxy` / `getch` / colores ANSI | `../registro-estudiantes-web/dist/index.html` |
 | Salida | `bin/registro_estudiantes` | `../registro-estudiantes-web/web/registro_web.js` + `.wasm` |
 
-`nucleo/funciones.c` y `nucleo/estudiantes.h` **son los mismos archivos en los
-dos casos**: no se duplica la lógica.
+Los archivos de lógica (`src/funciones.c`, `src/validacion.c`, `src/memoria.c`
+y las cabeceras de `include/`) **son los mismos en los dos casos**: no se
+duplica la lógica.
 
 > Salvo indicación, todos los comandos se ejecutan **desde la raíz de este
 > proyecto** (`.../c/registro de estudiantes_proyet`).
@@ -30,7 +34,7 @@ dos casos**: no se duplica la lógica.
 ## 1. Compilar para la terminal
 
 ```bash
-gcc -Wall main.c nucleo/funciones.c terminal/terminal.c -o bin/registro_estudiantes
+gcc -Wall main.c src/funciones.c src/terminal.c -o bin/registro_estudiantes
 ./bin/registro_estudiantes
 ```
 
@@ -41,8 +45,8 @@ make
 make run
 ```
 
-> Ojo: hay que pasar **los tres** `.c`. Si falta `terminal/terminal.c` recibes
-> `referencia a 'gotoxy' sin definir` y similares (son errores de enlace).
+> Ojo: hay que pasar **todos** los `.c` del proyecto. Si falta `src/terminal.c`
+> recibes `referencia a 'gotoxy' sin definir` y similares (son errores de enlace).
 
 ---
 
@@ -59,7 +63,7 @@ source /home/chris/emsdk/emsdk_env.sh
 /home/chris/studio/registro-estudiantes-web/herramientas/build_wasm.sh
 ```
 
-El script toma la lógica de `nucleo/` (de este proyecto: `funciones.c`,
+El script toma la lógica de `src/` (de este proyecto: `funciones.c`,
 `validacion.c` y `memoria.c`) y la fachada de
 `../registro-estudiantes-web/api_web/api_web.c`, y genera:
 
@@ -100,15 +104,19 @@ c/registro de estudiantes_proyet/
 ├── main.c                ← punto de entrada; en main SOLO hay llamadas (NO entra al wasm)
 ├── Makefile              ← make / make run / make clean / make wasm
 ├── README.md             ← este documento
-├── nucleo/               ← datos y lógica pura del sistema (SÍ entra al wasm)
-│   ├── estudiantes.h     ← structs, CONSTANTES del negocio y prototipos (compartido)
+├── include/              ← cabeceras: una por módulo (como el proyecto del curso)
+│   ├── estructuras.h     ← typedefs Boletin y Estudiante (compartido)
+│   ├── constantes.h      ← colores ANSI y CONSTANTES del negocio (compartido)
+│   ├── funciones.h       ← prototipos de funciones.c
+│   ├── validacion.h      ← prototipos de validacion.c
+│   ├── memoria.h         ← prototipos de memoria.c
+│   ├── terminal.h        ← prototipos de terminal.c (pantalla y entrada)
+│   └── menu.h            ← prototipo del menú principal
+├── src/                  ← implementaciones (un .c por módulo)
 │   ├── funciones.c       ← promedio, ordenamiento, .dat y agregarEstudiante()
 │   ├── validacion.c      ← validarNota() / validarEstudiante() (los rangos, UNA sola vez)
-│   └── memoria.c         ← ampliarEstudiantes() / liberarEstudiantes()
-├── terminal/             ← interfaz de consola (NO entra al wasm)
-│   ├── terminal.h        ← prototipos y colores ANSI
+│   ├── memoria.c         ← ampliarEstudiantes() / liberarEstudiantes()
 │   ├── terminal.c        ← getch, gotoxy, scanf, formularios, listado y búsqueda
-│   ├── menu.h            ← prototipo del menú principal
 │   └── menu.c            ← menú principal y flujo de cada opción
 ├── bin/                  ← binarios y objetos compilados (no son código fuente)
 │   └── registro_estudiantes
@@ -124,15 +132,16 @@ studio/registro-estudiantes-web/
 └── dist/                     ← index.html + registro_web.js + registro_web.wasm (listo para desplegar)
 ```
 
-> **Regla de organización:** en `main.c` solo se ven llamadas; todas las
-> funciones están definidas **antes** que `main`. Lo que es de terminal
-> vive en `terminal/` y **no** compila el wasm: `nucleo/funciones.c` contiene
-> únicamente la lógica pura del sistema.
+> **Regla de organización:** en `main.c` solo se ven llamadas; cada `.c`
+> incluye primero **su propia cabecera** de `include/` y después las demás
+> que necesita. Los módulos que no tocan la consola (`funciones`,
+> `validacion`, `memoria`) son los que se compilan para el wasm: el menú y
+> la terminal (`src/terminal.c`, `src/menu.c`) se quedan fuera.
 
 ### ¿Por qué `api_web.c` y no directamente `main.c`?
 
-Porque `main.c` y `terminal/terminal.c` dependen de la terminal (y por eso **no**
-entran al wasm; `nucleo/funciones.c` ya no contiene nada de consola):
+Porque `main.c` y `src/terminal.c` dependen de la terminal (y por eso **no**
+entran al wasm; los módulos de lógica ya no contienen nada de consola):
 
 | Función | Por qué no sirve en el navegador |
 |---|---|
@@ -212,8 +221,8 @@ consola del navegador `localStorage.clear()`.
 make
 
 # terminal (a mano)
-gcc -Wall main.c nucleo/funciones.c nucleo/validacion.c nucleo/memoria.c \
-    terminal/terminal.c terminal/menu.c -o bin/registro_estudiantes
+gcc -Wall main.c src/funciones.c src/validacion.c src/memoria.c \
+    src/terminal.c src/menu.c -o bin/registro_estudiantes
 
 # wasm (necesita source /home/chris/emsdk/emsdk_env.sh primero)
 make wasm
@@ -236,8 +245,8 @@ Y recarga la página con **Ctrl+Shift+R** (hard refresh) para que no quede el
 | `JSON.parse` recibe código de una función | faltaba la **segunda llamada**: `cwrap()` devuelve una función, no el resultado | `const f = Module.cwrap(...); f();` — guardar la función y luego invocarla |
 | `No se pudo cargar registro_web.wasm` | abierto con `file://` o sin compilar | servidor HTTP + `build_wasm.sh` |
 | `Module.cwrap is not a function` | `Module` definido tarde | definirlo **antes** del `<script src>` |
-| `undefined reference to 'gotoxy'` | faltan archivos al enlazar | `make` (o pasa **todos** los `.c`: `nucleo/` y `terminal/`) |
-| `estudiantes.h: No such file or directory` (wasm) | el script no encontró el proyecto terminal | revisa la variable `PROYECTO` de `build_wasm.sh` |
+| `undefined reference to 'gotoxy'` | faltan archivos al enlazar | `make` (o pasa **todos** los `.c`: los cinco de `src/` más `main.c`) |
+| `estructuras.h: No such file or directory` (wasm) | el script no encontró el proyecto terminal | revisa la variable `PROYECTO` de `build_wasm.sh` |
 | Página vieja tras recompilar | caché del navegador | `Ctrl+Shift+R` |
 | Puerto ocupado | otro proceso en 8080 | `python3 -m http.server 8081` |
 

@@ -1,22 +1,24 @@
 /*
- * memoria.c — Reserva y liberación de memoria dinámica del arreglo de
+ * memoria.c — Reserva y liberacion de memoria dinamica del arreglo de
  * estudiantes.
  *
- * Aquí está TODO el malloc/realloc/free del proyecto: antes estaba
+ * Aqui esta TODO el malloc/realloc/free del proyecto: antes estaba
  * repartido entre main.c, funciones.c y api_web.c.
  *
- * Sin terminal y sin lógica de negocio.
+ * Sin terminal y sin logica de negocio.
  */
 
-#include "estudiantes.h"
+#include <stdlib.h>
+
+#include "../include/memoria.h"
 
 /* ================================================================== */
 /*  AMPLIAR EL ARREGLO                                                 */
 /* ================================================================== */
 
 /* Devuelve el arreglo con espacio para (cantidad + 1) estudiantes.
- * Devuelve NULL si no hay memoria o si la cantidad es inválida.
- * El puntero original sigue siendo válido si esta función falla. */
+ * Devuelve NULL si no hay memoria o si la cantidad es invalida.
+ * El puntero original sigue siendo valido si esta funcion falla. */
 Estudiante *ampliarEstudiantes(Estudiante *alumnos, int cantidad) {
     if (cantidad < 0) return NULL;
 

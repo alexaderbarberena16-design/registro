@@ -1,21 +1,25 @@
 /*
- * menu.c — Menú principal de la versión de terminal.
+ * menu.c — Menu principal de la version de terminal.
  *
- * Acá vive el dibujo del menú y el flujo de cada opción. NO contiene
- * lógica de negocio: lo único que hace es pedir datos a terminal.c
- * y delegar en agregarEstudiante() (nucleo/).
+ * Aca vive el dibujo del menu y el flujo de cada opcion. NO contiene
+ * logica de negocio: lo unico que hace es pedir datos a terminal.c
+ * y delegar en agregarEstudiante() (src/).
  *
  * Este archivo NO entra al WebAssembly.
  */
 
-#include "menu.h"
-#include "terminal.h"
+#include <stdio.h>
+
+#include "../include/menu.h"
+#include "../include/terminal.h"
+#include "../include/funciones.h"
+#include "../include/constantes.h"
 
 /* ================================================================== */
 /*  PANTALLAS                                                          */
 /* ================================================================== */
 
-/* Dibuja el menú principal y devuelve la opción elegida (1-4) */
+/* Dibuja el menu principal y devuelve la opcion elegida (1-4) */
 static int mostrarMenuPrincipal(int cantidad) {
     limpiarPantalla();
     titulo("SISTEMA DE CONTROL Y REGISTRO ACADEMICO");
@@ -55,7 +59,7 @@ static void salirDelSistema(void) {
 /* ================================================================== */
 
 /* Pide los datos por pantalla y delega el alta en agregarEstudiante().
- * Devuelve: 1 = registrado, 0 = datos inválidos, -1 = sin memoria. */
+ * Devuelve: 1 = registrado, 0 = datos invalidos, -1 = sin memoria. */
 static int registrarNuevoEstudiante(Estudiante **alumnos, int *cantidad) {
     Estudiante nuevo;
     int resultado;
@@ -66,7 +70,7 @@ static int registrarNuevoEstudiante(Estudiante **alumnos, int *cantidad) {
     llenarInformacionAlumno(&nuevo, *cantidad + 1);
     llenarInformacionBoletin(&nuevo);
 
-    /* Validación + memoria + promedio + orden + guardado: todo en nucleo/ */
+    /* Validacion + memoria + promedio + orden + guardado: todo en src/ */
     resultado = agregarEstudiante(alumnos, cantidad, &nuevo);
 
     if (resultado == 1) {
@@ -100,7 +104,7 @@ static int registrarNuevoEstudiante(Estudiante **alumnos, int *cantidad) {
 /*  BUCLE PRINCIPAL                                                    */
 /* ================================================================== */
 
-/* Muestra el menú y ejecuta la opción elegida hasta que salen */
+/* Muestra el menu y ejecuta la opcion elegida hasta que salen */
 void ejecutarMenuPrincipal(Estudiante **alumnos, int *cantidad) {
     int opcion = 0;
 

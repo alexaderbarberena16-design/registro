@@ -1,6 +1,10 @@
-bin/main.o: main.c nucleo/estudiantes.h terminal/terminal.h \
- terminal/../nucleo/estudiantes.h terminal/menu.h
-nucleo/estudiantes.h:
-terminal/terminal.h:
-terminal/../nucleo/estudiantes.h:
-terminal/menu.h:
+bin/main.o: main.c include/estructuras.h include/funciones.h \
+ include/estructuras.h include/validacion.h include/memoria.h \
+ include/terminal.h include/menu.h
+include/estructuras.h:
+include/funciones.h:
+include/estructuras.h:
+include/validacion.h:
+include/memoria.h:
+include/terminal.h:
+include/menu.h:

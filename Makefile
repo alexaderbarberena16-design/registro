@@ -16,11 +16,11 @@ CFLAGS   = -std=gnu11 -Wall -Wextra -g
 BIN      = bin/registro_estudiantes
 
 SRC      = main.c \
-           nucleo/funciones.c \
-           nucleo/validacion.c \
-           nucleo/memoria.c \
-           terminal/terminal.c \
-           terminal/menu.c
+           src/funciones.c \
+           src/validacion.c \
+           src/memoria.c \
+           src/terminal.c \
+           src/menu.c
 
 OBJ      = $(SRC:%.c=bin/%.o)
 DEP      = $(OBJ:.o=.d)

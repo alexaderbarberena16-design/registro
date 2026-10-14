@@ -1,20 +1,23 @@
 /*
  * validacion.c — Reglas de negocio sobre los datos del estudiante.
  *
- * Es la ÚNICA definición de los rangos válidos: tanto la terminal como
- * la versión WebAssembly validan con estas funciones (no cada una por
+ * Es la UNICA definicion de los rangos validos: tanto la terminal como
+ * la version WebAssembly validan con estas funciones (no cada una por
  * su lado).
  *
- * Sin terminal, sin archivos y sin memoria dinámica.
+ * Sin terminal, sin archivos y sin memoria dinamica.
  */
 
-#include "estudiantes.h"
+#include <stddef.h>
+
+#include "../include/validacion.h"
+#include "../include/constantes.h"
 
 /* ================================================================== */
 /*  NOTAS                                                              */
 /* ================================================================== */
 
-/* 1 = la nota está dentro del rango permitido */
+/* 1 = la nota esta dentro del rango permitido */
 int validarNota(float nota) {
     return (nota >= NOTA_MINIMA && nota <= NOTA_MAXIMA);
 }
@@ -23,7 +26,7 @@ int validarNota(float nota) {
 /*  ESTUDIANTE COMPLETO                                                */
 /* ================================================================== */
 
-/* 1 = todos los campos del registro son válidos */
+/* 1 = todos los campos del registro son validos */
 int validarEstudiante(const Estudiante *alumno) {
     if (alumno == NULL) return 0;
 

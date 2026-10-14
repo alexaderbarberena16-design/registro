@@ -9,10 +9,14 @@
  * En el navegador, esta interfaz la reemplaza dist/index.html.
  */
 
-#include "terminal.h"
-
+#include <stdio.h>
+#include <string.h>
 #include <termios.h>
 #include <unistd.h>
+
+#include "../include/terminal.h"
+#include "../include/constantes.h"
+#include "../include/funciones.h"
 
 /* ================================================================== */
 /*  CONFIGURACION                                                      */
