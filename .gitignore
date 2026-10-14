@@ -1,5 +1,0 @@
-# Archivos compilados y objetos (se regeneran con 'make')
-bin/
-
-# Base de datos local del programa
-estudiantes.dat
